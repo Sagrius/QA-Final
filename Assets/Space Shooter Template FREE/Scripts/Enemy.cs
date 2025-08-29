@@ -22,13 +22,15 @@ public class Enemy : MonoBehaviour {
     private SpriteRenderer SRenderer;
     private Color startingColor;
     public bool isBoss = false;
-    [HideInInspector] public int shotChance; //probability of 'Enemy's' shooting during tha path
-    [HideInInspector] public float shotTimeMin, shotTimeMax; //max and min time for shooting from the beginning of the path
+    [HideInInspector] public int shotChance =50; //probability of 'Enemy's' shooting during tha path
+    [HideInInspector] public float shotTimeMin = 0.5f, shotTimeMax = 1f; //max and min time for shooting from the beginning of the path
     #endregion
 
     private void Start()
     {
-        Invoke("ActivateShooting", Random.Range(shotTimeMin, shotTimeMax));
+        if (isBoss) InvokeRepeating("ActivateShooting", 1, Random.Range(0.3f, 0.6f));
+        else Invoke("ActivateShooting", Random.Range(shotTimeMin, shotTimeMax));
+
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1))
         {
             if(!isBoss) SetupShield(1);

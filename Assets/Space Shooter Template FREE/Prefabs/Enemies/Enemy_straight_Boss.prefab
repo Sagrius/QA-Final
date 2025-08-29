@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4073124609858142}
   - component: {fileID: 212742557042598518}
   - component: {fileID: 114339271854877628}
+  - component: {fileID: 3366439521901074695}
   - component: {fileID: 58425179734721642}
   - component: {fileID: 50267448758737772}
   m_Layer: 0
@@ -80,7 +81,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 3c6d6674bfcb5ac498628dff731a28f5, type: 3}
-  m_Color: {r: 0.6769946, g: 1, b: 0.5415094, a: 1}
+  m_Color: {r: 0.5849056, g: 0.010013349, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -111,6 +112,20 @@ MonoBehaviour:
   shotChance: 10
   shotTimeMin: 1
   shotTimeMax: 3
+--- !u!114 &3366439521901074695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1373690366928948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f9def12731afba4385a8e1965a993ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
+  pauseDuration: 2
 --- !u!58 &58425179734721642
 CircleCollider2D:
   m_ObjectHideFlags: 0

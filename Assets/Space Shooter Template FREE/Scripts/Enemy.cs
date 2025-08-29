@@ -29,7 +29,10 @@ public class Enemy : MonoBehaviour {
     private void Start()
     {
         Invoke("ActivateShooting", Random.Range(shotTimeMin, shotTimeMax));
-        if(SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1)) SetupShield(1);
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1))
+        {
+            SetupShield(1);
+        } 
         
 
     }

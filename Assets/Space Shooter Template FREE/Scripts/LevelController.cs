@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 #region Serializable classes
@@ -27,8 +28,10 @@ public class LevelController : MonoBehaviour {
     public float planetsSpeed;
     List<GameObject> planetsList = new List<GameObject>();
 
-    Camera mainCamera;   
+    Camera mainCamera;
 
+    private float _lastDelay;
+ 
     private void Start()
     {
         mainCamera = Camera.main;
@@ -39,8 +42,30 @@ public class LevelController : MonoBehaviour {
         }
         StartCoroutine(PowerupBonusCreation());
         StartCoroutine(PlanetsCreation());
+
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1)) return;
+        _lastDelay = enemyWaves[enemyWaves.Length - 1].timeToStart;
+        StartCoroutine(CheckIfAnyEnemiesAreAlive(_lastDelay));
+
     }
-    
+
+    private IEnumerator CheckIfAnyEnemiesAreAlive(float StartDelay)
+    {
+        yield return new WaitForSeconds(StartDelay);
+
+        while (true)
+        {
+            yield return new WaitForSeconds(0.5f);
+            if (FindAnyObjectByType<Enemy>() == false)
+            {
+                passToNextLevel();
+            }
+        }
+    }
+    private void passToNextLevel()
+    {
+        SceneManager.LoadScene(1);
+    }
     //Create a new wave after a delay
     IEnumerator CreateEnemyWave(float delay, GameObject Wave) 
     {
@@ -93,5 +118,6 @@ public class LevelController : MonoBehaviour {
 
             yield return new WaitForSeconds(timeBetweenPlanets);
         }
+
     }
 }

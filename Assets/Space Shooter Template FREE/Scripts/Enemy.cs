@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 /// <summary>
@@ -10,14 +11,17 @@ public class Enemy : MonoBehaviour {
     #region FIELDS
     [Tooltip("Health points in integer")]
     public int health;
-
+    private int shield = 0;
     [Tooltip("Enemy's projectile prefab")]
     public GameObject Projectile;
 
     [Tooltip("VFX prefab generating after destruction")]
     public GameObject destructionVFX;
     public GameObject hitEffect;
-    
+
+    private SpriteRenderer SRenderer;
+    private Color startingColor;
+
     [HideInInspector] public int shotChance; //probability of 'Enemy's' shooting during tha path
     [HideInInspector] public float shotTimeMin, shotTimeMax; //max and min time for shooting from the beginning of the path
     #endregion
@@ -25,6 +29,9 @@ public class Enemy : MonoBehaviour {
     private void Start()
     {
         Invoke("ActivateShooting", Random.Range(shotTimeMin, shotTimeMax));
+        if(SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1)) SetupShield(1);
+        
+
     }
 
     //coroutine making a shot
@@ -39,6 +46,14 @@ public class Enemy : MonoBehaviour {
     //method of getting damage for the 'Enemy'
     public void GetDamage(int damage) 
     {
+        if (shield > 0)
+        {
+            shield -= damage;
+            if (shield <= 0) SRenderer.color = startingColor;
+            return;
+        }
+       
+
         health -= damage;           //reducing health for damage value, if health is less than 0, starting destruction procedure
         if (health <= 0)
             Destruction();
@@ -49,7 +64,7 @@ public class Enemy : MonoBehaviour {
     //if 'Enemy' collides 'Player', 'Player' gets the damage equal to projectile's damage value
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Player")
+        if (collision.CompareTag("Player"))
         {
             if (Projectile.GetComponent<Projectile>() != null)
                 Player.instance.GetDamage(Projectile.GetComponent<Projectile>().damage);
@@ -63,5 +78,14 @@ public class Enemy : MonoBehaviour {
     {        
         Instantiate(destructionVFX, transform.position, Quaternion.identity); 
         Destroy(gameObject);
+    }
+
+    private void SetupShield(int shieldValue)
+    {
+       SRenderer = GetComponent<SpriteRenderer>();
+       startingColor = SRenderer.color;
+       SRenderer.color = Color.cyan;
+       shield = shieldValue;
+        
     }
 }

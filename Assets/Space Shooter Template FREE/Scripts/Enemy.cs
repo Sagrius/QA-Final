@@ -21,7 +21,7 @@ public class Enemy : MonoBehaviour {
 
     private SpriteRenderer SRenderer;
     private Color startingColor;
-
+    public bool isBoss = false;
     [HideInInspector] public int shotChance; //probability of 'Enemy's' shooting during tha path
     [HideInInspector] public float shotTimeMin, shotTimeMax; //max and min time for shooting from the beginning of the path
     #endregion
@@ -31,7 +31,7 @@ public class Enemy : MonoBehaviour {
         Invoke("ActivateShooting", Random.Range(shotTimeMin, shotTimeMax));
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1))
         {
-            SetupShield(1);
+            if(!isBoss) SetupShield(1);
         } 
         
 

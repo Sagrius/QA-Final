@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// This script generates an enemy wave. It defines how many enemies will be emerging, their speed and emerging interval. 
@@ -52,6 +53,11 @@ public class Wave : MonoBehaviour {
 
     private void Start()
     {
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1))
+        {
+            speed += 10;
+            shooting.shotChance += 20;
+        }
         StartCoroutine(CreateEnemyWave()); 
     }
 
@@ -61,12 +67,16 @@ public class Wave : MonoBehaviour {
         {
             GameObject newEnemy;
             newEnemy = Instantiate(enemy, enemy.transform.position, Quaternion.identity);
-            FollowThePath followComponent = newEnemy.GetComponent<FollowThePath>(); 
-            followComponent.path = pathPoints;         
-            followComponent.speed = speed;        
-            followComponent.rotationByPath = rotationByPath;
-            followComponent.loop = Loop;
-            followComponent.SetPath(); 
+            if (!newEnemy.GetComponent<Enemy>().isBoss)
+            {
+                FollowThePath followComponent = newEnemy.GetComponent<FollowThePath>();
+                followComponent.path = pathPoints;
+                followComponent.speed = speed;
+                followComponent.rotationByPath = rotationByPath;
+                followComponent.loop = Loop;
+                followComponent.SetPath();
+            }
+            
             Enemy enemyComponent = newEnemy.GetComponent<Enemy>();  
             enemyComponent.shotChance = shooting.shotChance; 
             enemyComponent.shotTimeMin = shooting.shotTimeMin; 

@@ -10,8 +10,11 @@ public class Enemy : MonoBehaviour {
 
     #region FIELDS
     [Tooltip("Health points in integer")]
-    public int health;
+    public int health = 2;
     private int shield = 0;
+
+    public int Shield => shield;
+
     [Tooltip("Enemy's projectile prefab")]
     public GameObject Projectile;
 
@@ -54,8 +57,21 @@ public class Enemy : MonoBehaviour {
         if (shield > 0)
         {
             shield -= damage;
-            if (shield <= 0) SRenderer.color = startingColor;
-            return;
+            if (shield == 0) 
+            {
+                if (SRenderer) SRenderer.color = startingColor;
+                return;
+            }
+            else if (shield < 0)
+            {
+                damage = shield * -1;
+                shield = 0;
+                if (SRenderer) SRenderer.color = startingColor;
+            }
+            else
+            {
+                return;
+            }
         }
        
 
@@ -63,7 +79,7 @@ public class Enemy : MonoBehaviour {
         if (health <= 0)
             Destruction();
         else
-            Instantiate(hitEffect,transform.position,Quaternion.identity,transform);
+            if (hitEffect) Instantiate(hitEffect,transform.position,Quaternion.identity,transform);
     }    
 
     //if 'Enemy' collides 'Player', 'Player' gets the damage equal to projectile's damage value
@@ -81,15 +97,18 @@ public class Enemy : MonoBehaviour {
     //method of destroying the 'Enemy'
     void Destruction()                           
     {        
-        Instantiate(destructionVFX, transform.position, Quaternion.identity); 
+        if (destructionVFX) Instantiate(destructionVFX, transform.position, Quaternion.identity); 
         Destroy(gameObject);
     }
 
-    private void SetupShield(int shieldValue)
+    public void SetupShield(int shieldValue)
     {
-       SRenderer = GetComponent<SpriteRenderer>();
-       startingColor = SRenderer.color;
-       SRenderer.color = Color.cyan;
+        SRenderer = GetComponent<SpriteRenderer>();
+        if (SRenderer)
+        {
+            startingColor = SRenderer.color;
+            SRenderer.color = Color.cyan;
+        }
        shield = shieldValue;
         
     }

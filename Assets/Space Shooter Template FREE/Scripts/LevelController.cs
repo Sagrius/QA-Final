@@ -31,6 +31,8 @@ public class LevelController : MonoBehaviour {
     Camera mainCamera;
 
     private float _lastDelay;
+    private bool _readyToTransition = false;
+    public bool ReadyToTransition => _readyToTransition;
  
     private void Start()
     {
@@ -52,13 +54,14 @@ public class LevelController : MonoBehaviour {
     private IEnumerator CheckIfAnyEnemiesAreAlive(float StartDelay)
     {
         yield return new WaitForSeconds(StartDelay);
-
+        _readyToTransition = true;
         while (true)
         {
             yield return new WaitForSeconds(0.5f);
             if (FindAnyObjectByType<Enemy>() == false)
             {
                 passToNextLevel();
+                break;
             }
         }
     }

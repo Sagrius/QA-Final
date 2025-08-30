@@ -16,20 +16,24 @@ public class BossMovement : MonoBehaviour
 
     void Start()
     {
-        GameObject spawnLocationRef = FindAnyObjectByType<BossSpawnLocation>().gameObject;
-
-        if (spawnLocationRef != null)
+        BossSpawnLocation location = FindAnyObjectByType<BossSpawnLocation>();
+        if (location)
         {
-            foreach (Transform child in spawnLocationRef.transform)
-            {
-                possibleMoveTargetPositions.Add(child.position);
-            }
+            GameObject spawnLocationRef = location.gameObject;
 
-            transform.position = spawnLocationRef.transform.position;
-
-            if (possibleMoveTargetPositions.Count > 1)
+            if (spawnLocationRef != null)
             {
-                StartCoroutine(MoveRoutine());
+                foreach (Transform child in spawnLocationRef.transform)
+                {
+                    possibleMoveTargetPositions.Add(child.position);
+                }
+
+                transform.position = spawnLocationRef.transform.position;
+
+                if (possibleMoveTargetPositions.Count > 1)
+                {
+                    StartCoroutine(MoveRoutine());
+                }
             }
         }
     }

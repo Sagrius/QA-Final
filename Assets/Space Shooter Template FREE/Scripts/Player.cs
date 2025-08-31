@@ -11,7 +11,9 @@ public class Player : MonoBehaviour
 {
     public GameObject destructionFX;
 
-    public static Player instance; 
+    public static Player instance;
+
+    public static bool isInvulnerable = false;
 
     private void Awake()
     {
@@ -22,7 +24,7 @@ public class Player : MonoBehaviour
     //method for damage proceccing by 'Player'
     public void GetDamage(int damage)   
     {
-        Destruction();
+        if (!isInvulnerable) Destruction();
     }    
 
     //'Player's' destruction procedure

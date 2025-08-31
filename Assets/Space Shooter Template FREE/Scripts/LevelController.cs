@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using Unity.PerformanceTesting;
 
 #region Serializable classes
 [System.Serializable]
@@ -31,8 +32,10 @@ public class LevelController : MonoBehaviour {
     Camera mainCamera;
 
     private float _lastDelay;
+    public float LastDelay => _lastDelay;
     private bool _readyToTransition = false;
     public bool ReadyToTransition => _readyToTransition;
+    public bool StartingToTestForLEvelTransition=false;
  
     private void Start()
     {
@@ -44,9 +47,11 @@ public class LevelController : MonoBehaviour {
         }
         StartCoroutine(PowerupBonusCreation());
         StartCoroutine(PlanetsCreation());
+        _lastDelay = enemyWaves[enemyWaves.Length - 1].timeToStart;
+
 
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1)) return;
-        _lastDelay = enemyWaves[enemyWaves.Length - 1].timeToStart;
+        
         StartCoroutine(CheckIfAnyEnemiesAreAlive(_lastDelay));
 
     }
@@ -58,10 +63,17 @@ public class LevelController : MonoBehaviour {
         while (true)
         {
             yield return new WaitForSeconds(0.5f);
-            if (FindAnyObjectByType<Enemy>() == false)
+            StartingToTestForLEvelTransition = true;
+            //yield return null;
+            //yield return null;
+
+            using (Measure.Scope("TestingEndOfLevel"))
             {
-                passToNextLevel();
-                break;
+                if (FindAnyObjectByType<Enemy>() == false)
+                {
+                    passToNextLevel();
+                    break;
+                }
             }
         }
     }

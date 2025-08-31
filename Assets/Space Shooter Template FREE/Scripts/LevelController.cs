@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
-using Unity.PerformanceTesting;
 
 #region Serializable classes
 [System.Serializable]

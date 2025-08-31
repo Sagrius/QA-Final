@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class PerformanceTests
 {
     [UnityTest, Performance, Order(0)]
-    public IEnumerator MeasureFindAnyObjestOfType()
+    public IEnumerator MeasureFindAnyObjestOfTypeEnemy()
     {
         SceneManager.LoadScene(0);
         yield return null;
@@ -16,15 +16,13 @@ public class PerformanceTests
         LevelController level = Object.FindAnyObjectByType<LevelController>();
         Assert.IsNotNull(level);
 
-        while (!level.ReadyToTransition)
-        {
-            yield return null;
-        }
+        yield return new WaitForSeconds(2);
 
         Measure.Method(() =>
         {
              Object.FindAnyObjectByType<Enemy>();
         })
+
         .SampleGroup("Method Time")
         .WarmupCount(5)
         .MeasurementCount(20)
@@ -33,7 +31,7 @@ public class PerformanceTests
 
 
     [UnityTest, Performance, Order(1)]
-    public IEnumerator FrameRateOnAllWavesSpawnedLevel1()
+    public IEnumerator MeasureFrameRateFor10000Frames()
     {
 
         SceneManager.LoadScene(0);
@@ -42,36 +40,19 @@ public class PerformanceTests
         LevelController level = Object.FindAnyObjectByType<LevelController>();
         Assert.IsNotNull(level);
         Player.isInvulnerable = true;
-        Time.timeScale = 20;
-
-        yield return new WaitUntil(() => level.StartingToTestForLEvelTransition);
 
         yield return Measure.Frames()
-            .Scope("TestingEndOfLevel");
-
+            .SampleGroup("FPS_Test")
+            .WarmupCount(5)
+            .MeasurementCount(10000)
+            .Run();
 
         Player.isInvulnerable = false;
-        Time.timeScale = 1;
+
+        // 1000 / Avg = FPS 
     }
 
-    [UnityTest, Performance, Order(2)]
-    public IEnumerator FrameRateOnAllWavesSpawnedLevel2()
-    {
 
-        SceneManager.LoadScene(1);
-        yield return null;
-
-        LevelController level = Object.FindAnyObjectByType<LevelController>();
-        Assert.IsNotNull(level);
-
-        yield return new WaitForSeconds(level.LastDelay + 0.5f);
-
-
-        yield return Measure.Frames()
-            .SampleGroup("FPS")
-            .MeasurementCount(30)
-            .Run();
-    }
 
 
 

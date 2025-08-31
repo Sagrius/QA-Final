@@ -35,7 +35,6 @@ public class LevelController : MonoBehaviour {
     public float LastDelay => _lastDelay;
     private bool _readyToTransition = false;
     public bool ReadyToTransition => _readyToTransition;
-    public bool StartingToTestForLEvelTransition=false;
  
     private void Start()
     {
@@ -63,18 +62,14 @@ public class LevelController : MonoBehaviour {
         while (true)
         {
             yield return new WaitForSeconds(0.5f);
-            StartingToTestForLEvelTransition = true;
-            //yield return null;
-            //yield return null;
 
-            using (Measure.Scope("TestingEndOfLevel"))
+            if (FindAnyObjectByType<Enemy>() == false)
             {
-                if (FindAnyObjectByType<Enemy>() == false)
-                {
-                    passToNextLevel();
-                    break;
-                }
+                passToNextLevel();
+                break;
             }
+
+            
         }
     }
     private void passToNextLevel()
